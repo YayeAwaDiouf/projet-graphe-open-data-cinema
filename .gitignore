@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+
+outputs/graphs/*.gpickle
+outputs/graphs/graph_2000_2009.graphml
+outputs/graphs/graph_2010_2019.graphml

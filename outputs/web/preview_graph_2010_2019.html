@@ -1,0 +1,165 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 750px;
+                 background-color: #111111;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#97c2fc", "font": {"color": "white"}, "id": "Liam Neeson", "label": "Liam Neeson", "shape": "dot", "size": 48.6, "title": "Acteur : Liam Neeson\nP\u00e9riode : 2010_2019\n\nDegr\u00e9 total p\u00e9riode : 812\nNombre d\u2019acteurs diff\u00e9rents avec lesquels cet acteur a jou\u00e9 dans toute la p\u00e9riode.\n\nDegr\u00e9 visible dans ce graphe : 4\nNombre de liens avec les acteurs affich\u00e9s dans cette visualisation.\n\nCollaborateurs visibles : 4\n\nFilms visibles dans ce sous-graphe :\n- The Dark Knight Rises\n- Ted 2\n- The Lego Movie\n- The Next Three Days"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Channing Tatum", "label": "Channing Tatum", "shape": "dot", "size": 41.800000000000004, "title": "Acteur : Channing Tatum\nP\u00e9riode : 2010_2019\n\nDegr\u00e9 total p\u00e9riode : 676\nNombre d\u2019acteurs diff\u00e9rents avec lesquels cet acteur a jou\u00e9 dans toute la p\u00e9riode.\n\nDegr\u00e9 visible dans ce graphe : 5\nNombre de liens avec les acteurs affich\u00e9s dans cette visualisation.\n\nCollaborateurs visibles : 5\n\nFilms visibles dans ce sous-graphe :\n- The Lego Movie\n- Magic Mike XXL\n- Hail, Caesar!\n- Don Jon"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Anthony Mackie", "label": "Anthony Mackie", "shape": "dot", "size": 46.1, "title": "Acteur : Anthony Mackie\nP\u00e9riode : 2010_2019\n\nDegr\u00e9 total p\u00e9riode : 762\nNombre d\u2019acteurs diff\u00e9rents avec lesquels cet acteur a jou\u00e9 dans toute la p\u00e9riode.\n\nDegr\u00e9 visible dans ce graphe : 4\nNombre de liens avec les acteurs affich\u00e9s dans cette visualisation.\n\nCollaborateurs visibles : 4\n\nFilms visibles dans ce sous-graphe :\n- Avengers: Age of Ultron\n- Captain America: Civil War\n- Captain America: The Winter Soldier\n- Ant-Man\n- Real Steel\n- Man on a Ledge"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Paul Giamatti", "label": "Paul Giamatti", "shape": "dot", "size": 42.2, "title": "Acteur : Paul Giamatti\nP\u00e9riode : 2010_2019\n\nDegr\u00e9 total p\u00e9riode : 684\nNombre d\u2019acteurs diff\u00e9rents avec lesquels cet acteur a jou\u00e9 dans toute la p\u00e9riode.\n\nDegr\u00e9 visible dans ce graphe : 1\nNombre de liens avec les acteurs affich\u00e9s dans cette visualisation.\n\nCollaborateurs visibles : 1\n\nFilms visibles dans ce sous-graphe :\n- The Amazing Spider-Man 2"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Stan Lee", "label": "Stan Lee", "shape": "dot", "size": 60.45, "title": "Acteur : Stan Lee\nP\u00e9riode : 2010_2019\n\nDegr\u00e9 total p\u00e9riode : 1049\nNombre d\u2019acteurs diff\u00e9rents avec lesquels cet acteur a jou\u00e9 dans toute la p\u00e9riode.\n\nDegr\u00e9 visible dans ce graphe : 4\nNombre de liens avec les acteurs affich\u00e9s dans cette visualisation.\n\nCollaborateurs visibles : 4\n\nFilms visibles dans ce sous-graphe :\n- Avengers: Age of Ultron\n- Captain America: Civil War\n- Captain America: The Winter Soldier\n- Ant-Man\n- The Amazing Spider-Man 2\n- The Avengers\n- Iron Man 2\n- X-Men: Apocalypse"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Elizabeth Banks", "label": "Elizabeth Banks", "shape": "dot", "size": 42.45, "title": "Acteur : Elizabeth Banks\nP\u00e9riode : 2010_2019\n\nDegr\u00e9 total p\u00e9riode : 689\nNombre d\u2019acteurs diff\u00e9rents avec lesquels cet acteur a jou\u00e9 dans toute la p\u00e9riode.\n\nDegr\u00e9 visible dans ce graphe : 5\nNombre de liens avec les acteurs affich\u00e9s dans cette visualisation.\n\nCollaborateurs visibles : 5\n\nFilms visibles dans ce sous-graphe :\n- The Lego Movie\n- The Next Three Days\n- Magic Mike XXL\n- Man on a Ledge\n- Movie 43"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Morgan Freeman", "label": "Morgan Freeman", "shape": "dot", "size": 43.75, "title": "Acteur : Morgan Freeman\nP\u00e9riode : 2010_2019\n\nDegr\u00e9 total p\u00e9riode : 715\nNombre d\u2019acteurs diff\u00e9rents avec lesquels cet acteur a jou\u00e9 dans toute la p\u00e9riode.\n\nDegr\u00e9 visible dans ce graphe : 5\nNombre de liens avec les acteurs affich\u00e9s dans cette visualisation.\n\nCollaborateurs visibles : 5\n\nFilms visibles dans ce sous-graphe :\n- The Dark Knight Rises\n- Ted 2\n- The Lego Movie\n- Lucy"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Anne Hathaway", "label": "Anne Hathaway", "shape": "dot", "size": 41.75, "title": "Acteur : Anne Hathaway\nP\u00e9riode : 2010_2019\n\nDegr\u00e9 total p\u00e9riode : 675\nNombre d\u2019acteurs diff\u00e9rents avec lesquels cet acteur a jou\u00e9 dans toute la p\u00e9riode.\n\nDegr\u00e9 visible dans ce graphe : 5\nNombre de liens avec les acteurs affich\u00e9s dans cette visualisation.\n\nCollaborateurs visibles : 5\n\nFilms visibles dans ce sous-graphe :\n- The Dark Knight Rises\n- Don Jon\n- Les Mis\u00e9rables"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Hugh Jackman", "label": "Hugh Jackman", "shape": "dot", "size": 50.7, "title": "Acteur : Hugh Jackman\nP\u00e9riode : 2010_2019\n\nDegr\u00e9 total p\u00e9riode : 854\nNombre d\u2019acteurs diff\u00e9rents avec lesquels cet acteur a jou\u00e9 dans toute la p\u00e9riode.\n\nDegr\u00e9 visible dans ce graphe : 4\nNombre de liens avec les acteurs affich\u00e9s dans cette visualisation.\n\nCollaborateurs visibles : 4\n\nFilms visibles dans ce sous-graphe :\n- Real Steel\n- X-Men: Apocalypse\n- Movie 43\n- Les Mis\u00e9rables"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Scarlett Johansson", "label": "Scarlett Johansson", "shape": "dot", "size": 43.300000000000004, "title": "Acteur : Scarlett Johansson\nP\u00e9riode : 2010_2019\n\nDegr\u00e9 total p\u00e9riode : 706\nNombre d\u2019acteurs diff\u00e9rents avec lesquels cet acteur a jou\u00e9 dans toute la p\u00e9riode.\n\nDegr\u00e9 visible dans ce graphe : 5\nNombre de liens avec les acteurs affich\u00e9s dans cette visualisation.\n\nCollaborateurs visibles : 5\n\nFilms visibles dans ce sous-graphe :\n- Hail, Caesar!\n- Don Jon\n- Avengers: Age of Ultron\n- Captain America: Civil War\n- Captain America: The Winter Soldier\n- The Avengers\n- Iron Man 2\n- Lucy"}]);
+                  edges = new vis.DataSet([{"from": "Liam Neeson", "title": "Lien : Liam Neeson \u2194 Anne Hathaway\nNombre de films en commun : 1\n\nFilms en commun :\n- The Dark Knight Rises", "to": "Anne Hathaway", "value": 1, "width": 1}, {"from": "Liam Neeson", "title": "Lien : Liam Neeson \u2194 Morgan Freeman\nNombre de films en commun : 3\n\nFilms en commun :\n- The Dark Knight Rises\n- Ted 2\n- The Lego Movie", "to": "Morgan Freeman", "value": 3, "width": 3}, {"from": "Liam Neeson", "title": "Lien : Liam Neeson \u2194 Elizabeth Banks\nNombre de films en commun : 2\n\nFilms en commun :\n- The Lego Movie\n- The Next Three Days", "to": "Elizabeth Banks", "value": 2, "width": 2}, {"from": "Liam Neeson", "title": "Lien : Liam Neeson \u2194 Channing Tatum\nNombre de films en commun : 1\n\nFilms en commun :\n- The Lego Movie", "to": "Channing Tatum", "value": 1, "width": 1}, {"from": "Channing Tatum", "title": "Lien : Channing Tatum \u2194 Elizabeth Banks\nNombre de films en commun : 2\n\nFilms en commun :\n- The Lego Movie\n- Magic Mike XXL", "to": "Elizabeth Banks", "value": 2, "width": 2}, {"from": "Channing Tatum", "title": "Lien : Channing Tatum \u2194 Morgan Freeman\nNombre de films en commun : 1\n\nFilms en commun :\n- The Lego Movie", "to": "Morgan Freeman", "value": 1, "width": 1}, {"from": "Channing Tatum", "title": "Lien : Channing Tatum \u2194 Scarlett Johansson\nNombre de films en commun : 2\n\nFilms en commun :\n- Hail, Caesar!\n- Don Jon", "to": "Scarlett Johansson", "value": 2, "width": 2}, {"from": "Channing Tatum", "title": "Lien : Channing Tatum \u2194 Anne Hathaway\nNombre de films en commun : 1\n\nFilms en commun :\n- Don Jon", "to": "Anne Hathaway", "value": 1, "width": 1}, {"from": "Anthony Mackie", "title": "Lien : Anthony Mackie \u2194 Scarlett Johansson\nNombre de films en commun : 3\n\nFilms en commun :\n- Avengers: Age of Ultron\n- Captain America: Civil War\n- Captain America: The Winter Soldier", "to": "Scarlett Johansson", "value": 3, "width": 3}, {"from": "Anthony Mackie", "title": "Lien : Anthony Mackie \u2194 Stan Lee\nNombre de films en commun : 4\n\nFilms en commun :\n- Avengers: Age of Ultron\n- Captain America: Civil War\n- Captain America: The Winter Soldier\n- Ant-Man", "to": "Stan Lee", "value": 4, "width": 4}, {"from": "Anthony Mackie", "title": "Lien : Anthony Mackie \u2194 Hugh Jackman\nNombre de films en commun : 1\n\nFilms en commun :\n- Real Steel", "to": "Hugh Jackman", "value": 1, "width": 1}, {"from": "Anthony Mackie", "title": "Lien : Anthony Mackie \u2194 Elizabeth Banks\nNombre de films en commun : 1\n\nFilms en commun :\n- Man on a Ledge", "to": "Elizabeth Banks", "value": 1, "width": 1}, {"from": "Paul Giamatti", "title": "Lien : Paul Giamatti \u2194 Stan Lee\nNombre de films en commun : 1\n\nFilms en commun :\n- The Amazing Spider-Man 2", "to": "Stan Lee", "value": 1, "width": 1}, {"from": "Stan Lee", "title": "Lien : Stan Lee \u2194 Scarlett Johansson\nNombre de films en commun : 5\n\nFilms en commun :\n- Avengers: Age of Ultron\n- The Avengers\n- Captain America: Civil War\n- Iron Man 2\n- Captain America: The Winter Soldier", "to": "Scarlett Johansson", "value": 5, "width": 5}, {"from": "Stan Lee", "title": "Lien : Stan Lee \u2194 Hugh Jackman\nNombre de films en commun : 1\n\nFilms en commun :\n- X-Men: Apocalypse", "to": "Hugh Jackman", "value": 1, "width": 1}, {"from": "Elizabeth Banks", "title": "Lien : Elizabeth Banks \u2194 Morgan Freeman\nNombre de films en commun : 1\n\nFilms en commun :\n- The Lego Movie", "to": "Morgan Freeman", "value": 1, "width": 1}, {"from": "Elizabeth Banks", "title": "Lien : Elizabeth Banks \u2194 Hugh Jackman\nNombre de films en commun : 1\n\nFilms en commun :\n- Movie 43", "to": "Hugh Jackman", "value": 1, "width": 1}, {"from": "Morgan Freeman", "title": "Lien : Morgan Freeman \u2194 Anne Hathaway\nNombre de films en commun : 1\n\nFilms en commun :\n- The Dark Knight Rises", "to": "Anne Hathaway", "value": 1, "width": 1}, {"from": "Morgan Freeman", "title": "Lien : Morgan Freeman \u2194 Scarlett Johansson\nNombre de films en commun : 1\n\nFilms en commun :\n- Lucy", "to": "Scarlett Johansson", "value": 1, "width": 1}, {"from": "Anne Hathaway", "title": "Lien : Anne Hathaway \u2194 Hugh Jackman\nNombre de films en commun : 1\n\nFilms en commun :\n- Les Mis\u00e9rables", "to": "Hugh Jackman", "value": 1, "width": 1}, {"from": "Anne Hathaway", "title": "Lien : Anne Hathaway \u2194 Scarlett Johansson\nNombre de films en commun : 1\n\nFilms en commun :\n- Don Jon", "to": "Scarlett Johansson", "value": 1, "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {"physics": {"enabled": true, "stabilization": {"enabled": false}, "barnesHut": {"gravitationalConstant": -20000, "centralGravity": 0.2, "springLength": 180, "springConstant": 0.03, "damping": 0.08, "avoidOverlap": 0}}, "interaction": {"dragNodes": true, "dragView": true, "zoomView": true, "hover": true}};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    
+    <div style="
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
+        width: 410px;
+        background: rgba(255, 255, 255, 0.95);
+        color: black;
+        border: 2px solid #555;
+        padding: 14px;
+        z-index: 9999;
+        font-size: 13px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.35);
+        line-height: 1.4;
+        font-family: Arial, sans-serif;
+    ">
+        <h3 style="margin-top:0; margin-bottom:8px;">Lecture du graphe</h3>
+
+        <p><b>Nœud</b> : représente un acteur.</p>
+        <p><b>Lien</b> : deux acteurs ont joué ensemble dans au moins un film.</p>
+        <p><b>Taille du nœud</b> : dépend du degré de l’acteur.</p>
+        <p><b>Épaisseur du lien</b> : nombre de films joués en commun.</p>
+
+        <hr>
+
+        <p><b>Degré</b> : nombre d’acteurs différents avec lesquels un acteur a joué dans la période.</p>
+        <p><b>Films visibles</b> : films de la période présents dans le sous-graphe affiché.</p>
+
+        <hr>
+
+        <p><b>Astuce</b> : survolez un acteur ou un lien pour afficher les détails.</p>
+        <p style="font-size:12px;">
+            Le graphe complet étant très grand, seuls les acteurs les plus connectés sont affichés
+            afin de garder une visualisation lisible.
+        </p>
+    </div>
+    
+</body>
+</html>

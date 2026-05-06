@@ -1,0 +1,165 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 750px;
+                 background-color: #111111;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#97c2fc", "font": {"color": "white"}, "id": "Bruce Willis", "label": "Bruce Willis", "shape": "dot", "size": 34.25, "title": "Acteur : Bruce Willis\nP\u00e9riode : 1990_1999\n\nDegr\u00e9 total p\u00e9riode : 525\nNombre d\u2019acteurs diff\u00e9rents avec lesquels cet acteur a jou\u00e9 dans toute la p\u00e9riode.\n\nDegr\u00e9 visible dans ce graphe : 2\nNombre de liens avec les acteurs affich\u00e9s dans cette visualisation.\n\nCollaborateurs visibles : 2\n\nFilms visibles dans ce sous-graphe :\n- The Fifth Element\n- Die Hard: With a Vengeance\n- National Lampoon\u0027s Loaded Weapon 1\n- Pulp Fiction"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Mike Starr", "label": "Mike Starr", "shape": "dot", "size": 25.95, "title": "Acteur : Mike Starr\nP\u00e9riode : 1990_1999\n\nDegr\u00e9 total p\u00e9riode : 359\nNombre d\u2019acteurs diff\u00e9rents avec lesquels cet acteur a jou\u00e9 dans toute la p\u00e9riode.\n\nDegr\u00e9 visible dans ce graphe : 3\nNombre de liens avec les acteurs affich\u00e9s dans cette visualisation.\n\nCollaborateurs visibles : 3\n\nFilms visibles dans ce sous-graphe :\n- The Bodyguard\n- GoodFellas"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Danny DeVito", "label": "Danny DeVito", "shape": "dot", "size": 25.35, "title": "Acteur : Danny DeVito\nP\u00e9riode : 1990_1999\n\nDegr\u00e9 total p\u00e9riode : 347\nNombre d\u2019acteurs diff\u00e9rents avec lesquels cet acteur a jou\u00e9 dans toute la p\u00e9riode.\n\nDegr\u00e9 visible dans ce graphe : 2\nNombre de liens avec les acteurs affich\u00e9s dans cette visualisation.\n\nCollaborateurs visibles : 2\n\nFilms visibles dans ce sous-graphe :\n- L.A. Confidential\n- Hoffa\n- Living Out Loud"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Paul Guilfoyle", "label": "Paul Guilfoyle", "shape": "dot", "size": 28.85, "title": "Acteur : Paul Guilfoyle\nP\u00e9riode : 1990_1999\n\nDegr\u00e9 total p\u00e9riode : 417\nNombre d\u2019acteurs diff\u00e9rents avec lesquels cet acteur a jou\u00e9 dans toute la p\u00e9riode.\n\nDegr\u00e9 visible dans ce graphe : 5\nNombre de liens avec les acteurs affich\u00e9s dans cette visualisation.\n\nCollaborateurs visibles : 5\n\nFilms visibles dans ce sous-graphe :\n- L.A. Confidential\n- Hoffa\n- Air Force One\n- The Negotiator"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Robert De Niro", "label": "Robert De Niro", "shape": "dot", "size": 25.45, "title": "Acteur : Robert De Niro\nP\u00e9riode : 1990_1999\n\nDegr\u00e9 total p\u00e9riode : 349\nNombre d\u2019acteurs diff\u00e9rents avec lesquels cet acteur a jou\u00e9 dans toute la p\u00e9riode.\n\nDegr\u00e9 visible dans ce graphe : 2\nNombre de liens avec les acteurs affich\u00e9s dans cette visualisation.\n\nCollaborateurs visibles : 2\n\nFilms visibles dans ce sous-graphe :\n- GoodFellas\n- Jackie Brown"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Gary Oldman", "label": "Gary Oldman", "shape": "dot", "size": 26.400000000000002, "title": "Acteur : Gary Oldman\nP\u00e9riode : 1990_1999\n\nDegr\u00e9 total p\u00e9riode : 368\nNombre d\u2019acteurs diff\u00e9rents avec lesquels cet acteur a jou\u00e9 dans toute la p\u00e9riode.\n\nDegr\u00e9 visible dans ce graphe : 4\nNombre de liens avec les acteurs affich\u00e9s dans cette visualisation.\n\nCollaborateurs visibles : 4\n\nFilms visibles dans ce sous-graphe :\n- The Fifth Element\n- Air Force One\n- True Romance"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Philip Baker Hall", "label": "Philip Baker Hall", "shape": "dot", "size": 26.45, "title": "Acteur : Philip Baker Hall\nP\u00e9riode : 1990_1999\n\nDegr\u00e9 total p\u00e9riode : 369\nNombre d\u2019acteurs diff\u00e9rents avec lesquels cet acteur a jou\u00e9 dans toute la p\u00e9riode.\n\nDegr\u00e9 visible dans ce graphe : 4\nNombre de liens avec les acteurs affich\u00e9s dans cette visualisation.\n\nCollaborateurs visibles : 4\n\nFilms visibles dans ce sous-graphe :\n- Air Force One\n- Kiss of Death\n- Boogie Nights"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Samuel L. Jackson", "label": "Samuel L. Jackson", "shape": "dot", "size": 39.85, "title": "Acteur : Samuel L. Jackson\nP\u00e9riode : 1990_1999\n\nDegr\u00e9 total p\u00e9riode : 637\nNombre d\u2019acteurs diff\u00e9rents avec lesquels cet acteur a jou\u00e9 dans toute la p\u00e9riode.\n\nDegr\u00e9 visible dans ce graphe : 6\nNombre de liens avec les acteurs affich\u00e9s dans cette visualisation.\n\nCollaborateurs visibles : 6\n\nFilms visibles dans ce sous-graphe :\n- Die Hard: With a Vengeance\n- National Lampoon\u0027s Loaded Weapon 1\n- Pulp Fiction\n- GoodFellas\n- The Negotiator\n- Jackie Brown\n- True Romance\n- Kiss of Death"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Richard Schiff", "label": "Richard Schiff", "shape": "dot", "size": 28.400000000000002, "title": "Acteur : Richard Schiff\nP\u00e9riode : 1990_1999\n\nDegr\u00e9 total p\u00e9riode : 408\nNombre d\u2019acteurs diff\u00e9rents avec lesquels cet acteur a jou\u00e9 dans toute la p\u00e9riode.\n\nDegr\u00e9 visible dans ce graphe : 4\nNombre de liens avec les acteurs affich\u00e9s dans cette visualisation.\n\nCollaborateurs visibles : 4\n\nFilms visibles dans ce sous-graphe :\n- The Bodyguard\n- Hoffa\n- Living Out Loud\n- Tank Girl"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Anne Fletcher", "label": "Anne Fletcher", "shape": "dot", "size": 32.55, "title": "Acteur : Anne Fletcher\nP\u00e9riode : 1990_1999\n\nDegr\u00e9 total p\u00e9riode : 491\nNombre d\u2019acteurs diff\u00e9rents avec lesquels cet acteur a jou\u00e9 dans toute la p\u00e9riode.\n\nDegr\u00e9 visible dans ce graphe : 2\nNombre de liens avec les acteurs affich\u00e9s dans cette visualisation.\n\nCollaborateurs visibles : 2\n\nFilms visibles dans ce sous-graphe :\n- Boogie Nights\n- Tank Girl"}]);
+                  edges = new vis.DataSet([{"from": "Bruce Willis", "title": "Lien : Bruce Willis \u2194 Gary Oldman\nNombre de films en commun : 1\n\nFilms en commun :\n- The Fifth Element", "to": "Gary Oldman", "value": 1, "width": 1}, {"from": "Bruce Willis", "title": "Lien : Bruce Willis \u2194 Samuel L. Jackson\nNombre de films en commun : 3\n\nFilms en commun :\n- Die Hard: With a Vengeance\n- National Lampoon\u0027s Loaded Weapon 1\n- Pulp Fiction", "to": "Samuel L. Jackson", "value": 3, "width": 3}, {"from": "Mike Starr", "title": "Lien : Mike Starr \u2194 Richard Schiff\nNombre de films en commun : 1\n\nFilms en commun :\n- The Bodyguard", "to": "Richard Schiff", "value": 1, "width": 1}, {"from": "Mike Starr", "title": "Lien : Mike Starr \u2194 Robert De Niro\nNombre de films en commun : 1\n\nFilms en commun :\n- GoodFellas", "to": "Robert De Niro", "value": 1, "width": 1}, {"from": "Mike Starr", "title": "Lien : Mike Starr \u2194 Samuel L. Jackson\nNombre de films en commun : 1\n\nFilms en commun :\n- GoodFellas", "to": "Samuel L. Jackson", "value": 1, "width": 1}, {"from": "Danny DeVito", "title": "Lien : Danny DeVito \u2194 Paul Guilfoyle\nNombre de films en commun : 2\n\nFilms en commun :\n- L.A. Confidential\n- Hoffa", "to": "Paul Guilfoyle", "value": 2, "width": 2}, {"from": "Danny DeVito", "title": "Lien : Danny DeVito \u2194 Richard Schiff\nNombre de films en commun : 2\n\nFilms en commun :\n- Hoffa\n- Living Out Loud", "to": "Richard Schiff", "value": 2, "width": 2}, {"from": "Paul Guilfoyle", "title": "Lien : Paul Guilfoyle \u2194 Gary Oldman\nNombre de films en commun : 1\n\nFilms en commun :\n- Air Force One", "to": "Gary Oldman", "value": 1, "width": 1}, {"from": "Paul Guilfoyle", "title": "Lien : Paul Guilfoyle \u2194 Philip Baker Hall\nNombre de films en commun : 1\n\nFilms en commun :\n- Air Force One", "to": "Philip Baker Hall", "value": 1, "width": 1}, {"from": "Paul Guilfoyle", "title": "Lien : Paul Guilfoyle \u2194 Samuel L. Jackson\nNombre de films en commun : 1\n\nFilms en commun :\n- The Negotiator", "to": "Samuel L. Jackson", "value": 1, "width": 1}, {"from": "Paul Guilfoyle", "title": "Lien : Paul Guilfoyle \u2194 Richard Schiff\nNombre de films en commun : 1\n\nFilms en commun :\n- Hoffa", "to": "Richard Schiff", "value": 1, "width": 1}, {"from": "Robert De Niro", "title": "Lien : Robert De Niro \u2194 Samuel L. Jackson\nNombre de films en commun : 2\n\nFilms en commun :\n- GoodFellas\n- Jackie Brown", "to": "Samuel L. Jackson", "value": 2, "width": 2}, {"from": "Gary Oldman", "title": "Lien : Gary Oldman \u2194 Philip Baker Hall\nNombre de films en commun : 1\n\nFilms en commun :\n- Air Force One", "to": "Philip Baker Hall", "value": 1, "width": 1}, {"from": "Gary Oldman", "title": "Lien : Gary Oldman \u2194 Samuel L. Jackson\nNombre de films en commun : 1\n\nFilms en commun :\n- True Romance", "to": "Samuel L. Jackson", "value": 1, "width": 1}, {"from": "Philip Baker Hall", "title": "Lien : Philip Baker Hall \u2194 Samuel L. Jackson\nNombre de films en commun : 1\n\nFilms en commun :\n- Kiss of Death", "to": "Samuel L. Jackson", "value": 1, "width": 1}, {"from": "Philip Baker Hall", "title": "Lien : Philip Baker Hall \u2194 Anne Fletcher\nNombre de films en commun : 1\n\nFilms en commun :\n- Boogie Nights", "to": "Anne Fletcher", "value": 1, "width": 1}, {"from": "Richard Schiff", "title": "Lien : Richard Schiff \u2194 Anne Fletcher\nNombre de films en commun : 1\n\nFilms en commun :\n- Tank Girl", "to": "Anne Fletcher", "value": 1, "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {"physics": {"enabled": true, "stabilization": {"enabled": false}, "barnesHut": {"gravitationalConstant": -20000, "centralGravity": 0.2, "springLength": 180, "springConstant": 0.03, "damping": 0.08, "avoidOverlap": 0}}, "interaction": {"dragNodes": true, "dragView": true, "zoomView": true, "hover": true}};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    
+    <div style="
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
+        width: 410px;
+        background: rgba(255, 255, 255, 0.95);
+        color: black;
+        border: 2px solid #555;
+        padding: 14px;
+        z-index: 9999;
+        font-size: 13px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.35);
+        line-height: 1.4;
+        font-family: Arial, sans-serif;
+    ">
+        <h3 style="margin-top:0; margin-bottom:8px;">Lecture du graphe</h3>
+
+        <p><b>Nœud</b> : représente un acteur.</p>
+        <p><b>Lien</b> : deux acteurs ont joué ensemble dans au moins un film.</p>
+        <p><b>Taille du nœud</b> : dépend du degré de l’acteur.</p>
+        <p><b>Épaisseur du lien</b> : nombre de films joués en commun.</p>
+
+        <hr>
+
+        <p><b>Degré</b> : nombre d’acteurs différents avec lesquels un acteur a joué dans la période.</p>
+        <p><b>Films visibles</b> : films de la période présents dans le sous-graphe affiché.</p>
+
+        <hr>
+
+        <p><b>Astuce</b> : survolez un acteur ou un lien pour afficher les détails.</p>
+        <p style="font-size:12px;">
+            Le graphe complet étant très grand, seuls les acteurs les plus connectés sont affichés
+            afin de garder une visualisation lisible.
+        </p>
+    </div>
+    
+</body>
+</html>

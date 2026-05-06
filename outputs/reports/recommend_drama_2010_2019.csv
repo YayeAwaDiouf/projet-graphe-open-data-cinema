@@ -1,0 +1,11 @@
+title_movie,release_year_movie,genres_parsed,vote_average,popularity,period
+Whiplash,2014.0,['Drama'],8.3,192.528841,2010_2019
+Interstellar,2014.0,"['Adventure', 'Drama', 'Science Fiction']",8.1,724.247784,2010_2019
+Room,2015.0,"['Drama', 'Thriller']",8.1,66.11334,2010_2019
+"Guten Tag, Ramón",2013.0,['Drama'],8.1,1.771584,2010_2019
+The Imitation Game,2014.0,"['History', 'Drama', 'Thriller', 'War']",8.0,145.364591,2010_2019
+Inside Out,2015.0,"['Drama', 'Comedy', 'Animation', 'Family']",8.0,128.655964,2010_2019
+The Grand Budapest Hotel,2014.0,"['Comedy', 'Drama']",8.0,74.417456,2010_2019
+Gone Girl,2014.0,"['Mystery', 'Thriller', 'Drama']",7.9,143.041543,2010_2019
+12 Years a Slave,2013.0,"['Drama', 'History']",7.9,95.9229,2010_2019
+The Wolf of Wall Street,2013.0,"['Crime', 'Drama', 'Comedy']",7.9,95.007934,2010_2019

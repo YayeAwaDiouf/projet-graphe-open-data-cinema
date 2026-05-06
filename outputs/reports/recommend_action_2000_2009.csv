@@ -1,0 +1,11 @@
+title_movie,release_year_movie,genres_parsed,vote_average,popularity,period
+The Dark Knight,2008.0,"['Drama', 'Action', 'Crime', 'Thriller']",8.2,187.322927,2000_2009
+The Lord of the Rings: The Return of the King,2003.0,"['Adventure', 'Fantasy', 'Action']",8.1,123.630332,2000_2009
+The Lord of the Rings: The Fellowship of the Ring,2001.0,"['Adventure', 'Fantasy', 'Action']",8.0,138.049577,2000_2009
+The Lord of the Rings: The Two Towers,2002.0,"['Adventure', 'Fantasy', 'Action']",8.0,106.914973,2000_2009
+Oldboy,2003.0,"['Drama', 'Thriller', 'Mystery', 'Action']",8.0,56.76349,2000_2009
+Star Wars: Clone Wars: Volume 1,2005.0,"['Action', 'Adventure', 'Animation', 'Fantasy', 'Science Fiction']",8.0,1.881466,2000_2009
+Gladiator,2000.0,"['Action', 'Drama', 'Adventure']",7.9,95.301296,2000_2009
+Inglourious Basterds,2009.0,"['Drama', 'Action', 'Thriller', 'War']",7.9,72.595961,2000_2009
+V for Vendetta,2006.0,"['Action', 'Thriller', 'Fantasy']",7.7,84.630969,2000_2009
+Kill Bill: Vol. 1,2003.0,"['Action', 'Crime']",7.7,79.754966,2000_2009

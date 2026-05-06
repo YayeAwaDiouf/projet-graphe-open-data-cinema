@@ -1,0 +1,468 @@
+============================================================
+PROJET GRAPHES ET OPEN DATA — RÉSEAU D’ACTEURS TMDB
+Notes de suivi du projet
+============================================================
+
+Sujet :
+Analyse temporelle et communautaire d’un réseau d’acteurs à partir du dataset ouvert TMDB 5000 Movie Dataset.
+
+Dataset :
+- tmdb_5000_movies.csv
+- tmdb_5000_credits.csv
+
+Objectif général :
+Créer un graphe d’acteurs à partir de données open data, analyser les collaborations entre acteurs, détecter des communautés, exploiter les années, les genres, les films et proposer des visualisations ainsi qu’un système simple de recommandation.
+
+Principe du graphe :
+- Nœud = acteur
+- Arête = deux acteurs ont joué ensemble dans au moins un film
+- Poids de l’arête = nombre de films joués en commun
+
+
+============================================================
+1. PRÉTRAITEMENT DES DONNÉES
+Fichier : src/preprocess.py
+Commande : py -3.12 -m src.preprocess
+============================================================
+
+Objectif :
+Introduire une dimension temporelle dans le projet en découpant les films par périodes.
+
+Périodes utilisées :
+- 1990_1999
+- 2000_2009
+- 2010_2019
+
+Rôle du script :
+- Charger les données nettoyées
+- Filtrer les films selon les années
+- Générer un fichier CSV par période
+
+Fichiers générés :
+data/processed/movies_1990_1999.csv
+data/processed/movies_2000_2009.csv
+data/processed/movies_2010_2019.csv
+
+Phrase d’explication :
+Nous avons introduit une dimension temporelle en découpant les films par périodes afin d’analyser l’évolution des collaborations et des communautés dans le temps.
+
+
+============================================================
+2. CONSTRUCTION DES GRAPHES PAR PÉRIODE
+Fichier : src/graph_build.py
+Commande : py -3.12 -m src.graph_build
+============================================================
+
+Objectif :
+Construire un graphe d’acteurs pour chaque période afin d’analyser l’évolution des collaborations entre acteurs dans le temps.
+
+Rôle du script :
+- Charger les films filtrés par période
+- Charger les acteurs de chaque film
+- Créer les nœuds du graphe
+- Créer les arêtes entre acteurs ayant joué dans le même film
+- Ajouter un poids aux arêtes selon le nombre de films en commun
+- Exporter les graphes dans plusieurs formats
+
+Fichiers générés dans outputs/graphs :
+- graph_1990_1999.gpickle
+- graph_2000_2009.gpickle
+- graph_2010_2019.gpickle
+
+Fichiers visibles générés :
+- graph_1990_1999.graphml
+- graph_2000_2009.graphml
+- graph_2010_2019.graphml
+- nodes_1990_1999.csv
+- nodes_2000_2009.csv
+- nodes_2010_2019.csv
+- edges_1990_1999.csv
+- edges_2000_2009.csv
+- edges_2010_2019.csv
+
+Fichiers HTML générés dans outputs/web :
+- preview_graph_1990_1999.html
+- preview_graph_2000_2009.html
+- preview_graph_2010_2019.html
+
+Remarque :
+Le fichier .gpickle est un format interne Python. Il ne s’ouvre pas directement avec Excel ou un navigateur. Il sert à recharger le graphe dans les scripts Python.
+Pour l’utilisateur, les formats visibles sont : .csv, .graphml et .html.
+
+Phrase d’explication :
+Nous avons reconstruit un graphe par période afin d’analyser l’évolution des collaborations entre acteurs dans le temps.
+
+
+============================================================
+3. DÉTECTION DES COMMUNAUTÉS
+Fichier : src/community.py
+Commande : py -3.12 -m src.community
+============================================================
+
+Objectif :
+Appliquer l’algorithme de Louvain séparément sur chaque graphe temporel afin de détecter des communautés d’acteurs.
+
+Rôle du script :
+- Charger chaque graphe .gpickle
+- Travailler sur la plus grande composante connexe
+- Appliquer Louvain
+- Calculer le nombre de communautés
+- Calculer la taille des communautés
+
+Fichier généré :
+outputs/reports/community_sizes_by_period.csv
+
+Ce que cela permet d’analyser :
+- Les groupes d’acteurs fortement connectés
+- L’évolution de la structure du réseau selon les périodes
+- La fragmentation ou la concentration des collaborations
+
+Phrase d’explication :
+Nous avons appliqué la détection de communautés séparément sur chaque période afin d’observer l’évolution de la structure du réseau et la fragmentation des collaborations.
+
+Points cochés :
+- Communautés
+- Temps
+- Analyse comparative
+
+
+============================================================
+4. DESCRIPTION DES COMMUNAUTÉS
+Fichier : src/community_desc.py
+Commande : py -3.12 -m src.community_desc
+============================================================
+
+Objectif :
+Donner une interprétation aux communautés détectées par Louvain.
+
+Rôle du script :
+- Charger les graphes
+- Détecter les communautés
+- Relier les acteurs aux films
+- Relier les films aux genres
+- Décrire chaque communauté avec :
+  - période
+  - identifiant de communauté
+  - nombre d’acteurs
+  - nombre de films
+  - genres dominants
+
+Fichier généré :
+outputs/reports/community_description.csv
+
+Remarque importante :
+Les communautés n’ont pas de nom officiel dans le dataset. Louvain donne seulement un identifiant numérique, par exemple communauté 14.
+Pour les rendre compréhensibles, elles sont décrites à partir de leurs genres dominants et des films associés.
+
+Phrase d’explication :
+Nous avons enrichi les communautés détectées par Louvain en les décrivant à partir des genres de films et des acteurs, ce qui permet d’interpréter leur signification.
+
+
+============================================================
+5. COMPARAISON DES COMMUNAUTÉS PAR GENRES
+Fichier : src/queries.py
+Commande : py -3.12 -m src.queries
+============================================================
+
+Objectif :
+Comparer les communautés selon leurs genres dominants afin de vérifier si certains types de films structurent le réseau.
+
+Rôle du script :
+- Lire community_description.csv
+- Extraire les genres dominants
+- Produire des statistiques comparatives
+- Générer un CSV de comparaison
+- Générer un histogramme explicatif
+
+Fichiers générés :
+outputs/reports/community_genre_comparison.csv
+outputs/visuals/community_genre_comparison_histogram.png
+
+Phrase d’explication :
+Nous avons comparé les genres dominants des communautés afin de vérifier si un type de film structure le réseau. Certaines communautés sont fortement spécialisées, tandis que d’autres sont plus hétérogènes.
+
+
+============================================================
+6. VÉRIFICATION FILMS / COMMUNAUTÉS
+Fichier : src/film_community_check.py
+Commande : py -3.12 -m src.film_community_check
+============================================================
+
+Objectif du professeur :
+Lister les films afin de vérifier si les acteurs appartiennent aux mêmes films ou aux mêmes communautés.
+
+Objectif du script :
+Analyser chaque film pour savoir :
+- quels acteurs sont dedans
+- à quelles communautés appartiennent ces acteurs
+- quelle communauté domine le film
+- si le film est cohérent avec une communauté
+- ou s’il sert de pont entre plusieurs communautés
+
+Fichier généré :
+outputs/reports/movie_community_check.csv
+
+Résultat obtenu lors de l’exécution :
+- Nombre de films analysés : 4089
+- Films cohérents avec une communauté : 2552
+- Films ponts / mixtes : 1537
+
+Interprétation :
+Sur 4089 films analysés, 2552 films ont une majorité d’acteurs appartenant à une même communauté. Cela montre que les communautés détectées par Louvain correspondent souvent à de vrais groupes de collaboration.
+Les 1537 autres films sont plus mixtes et peuvent être vus comme des films-ponts entre plusieurs communautés.
+
+Phrase d’explication :
+Pour aller au-delà de la simple détection de communautés, nous avons relié chaque film aux communautés de ses acteurs. Cela permet de vérifier si les films sont principalement associés à une seule communauté ou s’ils mélangent plusieurs groupes d’acteurs.
+
+Phrase complémentaire :
+Les films dont les acteurs appartiennent à plusieurs communautés peuvent être interprétés comme des films-ponts entre différents sous-réseaux.
+
+
+============================================================
+7. RECOMMANDATION DE FILMS
+Fichier : src/recommend.py
+Commande : py -3.12 -m src.recommend
+============================================================
+
+Objectif du professeur :
+Faire une recommandation de films à partir de critères.
+
+Objectif du script :
+Créer un système simple de recommandation basé sur les données CSV et les résultats des communautés.
+
+Critères possibles :
+- période
+- genre
+- acteur
+- communauté dominante
+
+Fichiers générés :
+outputs/reports/recommend_action_2000_2009.csv
+outputs/reports/recommend_drama_2010_2019.csv
+
+Exemple de recommandation :
+- Recommander des films d’action entre 2000 et 2009
+- Recommander les meilleurs films liés à Tom Hanks
+- Recommander des films associés à une communauté dominante
+
+Phrase d’explication :
+Nous avons ajouté une fonctionnalité de recommandation simple à partir des critères issus du CSV : genre, période, acteur et communauté dominante. Cela montre que le graphe n’est pas seulement descriptif, mais qu’il peut servir à proposer des films.
+
+
+============================================================
+8. MENU INTERACTIF
+Fichier : src/cli_menu.py
+Commande : py -3.12 -m src.cli_menu
+============================================================
+
+Objectif :
+Centraliser toutes les fonctionnalités du projet dans un seul menu utilisable en ligne de commande.
+
+Menu principal :
+1 - Prétraiter les données par période
+2 - Construire les graphes par période
+3 - Détecter les communautés Louvain
+4 - Décrire les communautés
+5 - Comparer les communautés par genres
+6 - Vérifier films / communautés
+7 - Recommandation de films
+8 - Générer la carte monde interactive
+0 - Quitter
+
+Fonctionnalités améliorées :
+- Choix du genre depuis une liste
+- Recherche d’acteur avec propositions
+- Message si l’acteur n’existe pas dans la base
+- Choix de communauté à partir d’une liste descriptive
+- Choix de période accepté avec format 2000_2009 ou 2000-2009
+- Choix du nombre d’acteurs à afficher dans certains graphes
+
+Phrase d’explication :
+Le menu permet d’utiliser le projet comme une petite application de démonstration. L’utilisateur peut relancer les analyses, générer les visualisations et tester les recommandations sans exécuter manuellement chaque fichier Python.
+
+
+============================================================
+9. GRAPHE INTERACTIF HTML
+Fichier généré depuis : src/graph_build.py
+Fichiers HTML dans : outputs/web/
+============================================================
+
+Fichiers générés :
+- preview_graph_1990_1999.html
+- preview_graph_2000_2009.html
+- preview_graph_2010_2019.html
+
+Objectif :
+Afficher un graphe dynamique et interactif des acteurs les plus connectés.
+
+Fonctionnalités :
+- Les nœuds représentent les acteurs
+- Les liens représentent les collaborations
+- Les nœuds peuvent bouger
+- L’utilisateur peut zoomer et déplacer le graphe
+- Le survol d’un acteur affiche ses informations
+- Le survol d’un lien affiche les films en commun
+- Une légende explique la signification des nœuds, liens, degrés et poids
+
+Phrase d’explication :
+Nous avons généré un graphe interactif du réseau d’acteurs par période. La taille des nœuds reflète le degré, les liens indiquent les collaborations et les infobulles permettent d’afficher les films communs.
+
+
+============================================================
+10. CARTE MONDE INTERACTIVE
+Fichier : src/viz_world_map.py
+Commande : py -3.12 -m src.viz_world_map
+============================================================
+
+Librairie utilisée :
+Folium
+
+Installation :
+py -3.12 -m pip install folium
+
+Objectif :
+Créer une carte du monde interactive afin de visualiser les acteurs selon une dimension géographique.
+
+Fichiers générés dans outputs/web :
+- world_map_1990_1999.html
+- world_map_2000_2009.html
+- world_map_2010_2019.html
+
+Fonctionnalités :
+- Chaque acteur est positionné sur une carte du monde
+- La position est basée sur le pays dominant de production des films dans lesquels il apparaît
+- Au clic ou au survol, on peut voir :
+  - nom de l’acteur
+  - communauté
+  - degré total
+  - pays dominant
+  - genres dominants
+  - films de la période
+- Les liens affichent :
+  - le nombre de films en commun
+  - les noms des films en commun
+
+Remarque importante :
+Le dataset TMDB ne fournit pas directement le lieu de naissance des acteurs. Les acteurs sont donc positionnés selon le pays de production le plus fréquent des films où ils apparaissent.
+C’est une approximation logique et défendable.
+
+Phrase d’explication :
+Le degré total correspond au nombre d’acteurs différents avec lesquels un acteur a collaboré dans toute la période. Pour rendre la carte lisible, nous affichons un sous-graphe limité aux acteurs les plus centraux.
+
+Choix technique :
+Pour éviter la confusion liée aux liens cachés, nous pouvons afficher tous les liens du sous-graphe et contrôler la lisibilité avec le paramètre top_n.
+
+Code concerné :
+# On affiche tous les liens du sous-graphe.
+# Le sous-graphe reste contrôlé grâce au paramètre top_n.
+displayed_edges = edges_sorted
+
+
+============================================================
+11. EXPORTS ET FICHIERS GÉNÉRÉS
+============================================================
+
+Dossier data/raw :
+- tmdb_5000_movies.csv
+- tmdb_5000_credits.csv
+
+Dossier data/processed :
+- movies_1990_1999.csv
+- movies_2000_2009.csv
+- movies_2010_2019.csv
+
+Dossier outputs/graphs :
+- graph_1990_1999.gpickle
+- graph_2000_2009.gpickle
+- graph_2010_2019.gpickle
+- graph_1990_1999.graphml
+- graph_2000_2009.graphml
+- graph_2010_2019.graphml
+- nodes_1990_1999.csv
+- nodes_2000_2009.csv
+- nodes_2010_2019.csv
+- edges_1990_1999.csv
+- edges_2000_2009.csv
+- edges_2010_2019.csv
+
+Dossier outputs/reports :
+- community_sizes_by_period.csv
+- community_description.csv
+- community_genre_comparison.csv
+- movie_community_check.csv
+- recommend_action_2000_2009.csv
+- recommend_drama_2010_2019.csv
+
+Dossier outputs/visuals :
+- community_genre_comparison_histogram.png
+
+Dossier outputs/web :
+- preview_graph_1990_1999.html
+- preview_graph_2000_2009.html
+- preview_graph_2010_2019.html
+- world_map_1990_1999.html
+- world_map_2000_2009.html
+- world_map_2010_2019.html
+
+
+============================================================
+12. COMMANDES PRINCIPALES
+============================================================
+
+Lancer le chargement des données :
+py -3.12 -m src.load_data
+
+Prétraiter les données :
+py -3.12 -m src.preprocess
+
+Construire les graphes :
+py -3.12 -m src.graph_build
+
+Détecter les communautés :
+py -3.12 -m src.community
+
+Décrire les communautés :
+py -3.12 -m src.community_desc
+
+Comparer les communautés par genres :
+py -3.12 -m src.queries
+
+Vérifier films et communautés :
+py -3.12 -m src.film_community_check
+
+Générer des recommandations :
+py -3.12 -m src.recommend
+
+Générer les cartes monde :
+py -3.12 -m src.viz_world_map
+
+Lancer le menu principal :
+py -3.12 -m src.cli_menu
+
+
+============================================================
+13. PHRASES IMPORTANTES POUR LE RAPPORT / ORAL
+============================================================
+
+Phrase 1 :
+Nous ne nous sommes pas limités à construire un graphe global. Nous avons exploité les fichiers CSV pour introduire le temps, les genres, les films, les pays de production, les communautés et une logique de recommandation.
+
+Phrase 2 :
+Les communautés détectées par Louvain n’ont pas de noms officiels dans le dataset. Elles sont identifiées par un numéro technique, puis interprétées à partir des genres dominants et des films associés.
+
+Phrase 3 :
+Les films-ponts sont des films dont les acteurs appartiennent à plusieurs communautés. Ils permettent de relier différents sous-réseaux d’acteurs.
+
+Phrase 4 :
+Le fichier .gpickle est un format interne destiné à Python. Pour rendre le graphe directement visible par l’utilisateur, nous générons aussi des fichiers CSV, GraphML et HTML interactifs.
+
+Phrase 5 :
+La carte monde ne représente pas le lieu de naissance des acteurs. Elle positionne les acteurs selon le pays dominant de production des films dans lesquels ils apparaissent, car cette information est disponible dans le dataset.
+
+Phrase 6 :
+Le menu interactif permet de transformer le projet en application de démonstration, utilisable sans exécuter chaque script séparément.
+
+
+============================================================
+FIN DES NOTES
+============================================================

@@ -1,0 +1,165 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 750px;
+                 background-color: #111111;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#97c2fc", "font": {"color": "white"}, "id": "Willem Dafoe", "label": "Willem Dafoe", "shape": "dot", "size": 44.15, "title": "Acteur : Willem Dafoe\nP\u00e9riode : 2000_2009\n\nDegr\u00e9 total p\u00e9riode : 723\nNombre d\u2019acteurs diff\u00e9rents avec lesquels cet acteur a jou\u00e9 dans toute la p\u00e9riode.\n\nDegr\u00e9 visible dans ce graphe : 4\nNombre de liens avec les acteurs affich\u00e9s dans cette visualisation.\n\nCollaborateurs visibles : 4\n\nFilms visibles dans ce sous-graphe :\n- Spider-Man 3\n- Spider-Man 2\n- Spider-Man\n- xXx: State of the Union\n- The Life Aquatic with Steve Zissou\n- Fantastic Mr. Fox"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Owen Wilson", "label": "Owen Wilson", "shape": "dot", "size": 36.8, "title": "Acteur : Owen Wilson\nP\u00e9riode : 2000_2009\n\nDegr\u00e9 total p\u00e9riode : 576\nNombre d\u2019acteurs diff\u00e9rents avec lesquels cet acteur a jou\u00e9 dans toute la p\u00e9riode.\n\nDegr\u00e9 visible dans ce graphe : 4\nNombre de liens avec les acteurs affich\u00e9s dans cette visualisation.\n\nCollaborateurs visibles : 4\n\nFilms visibles dans ce sous-graphe :\n- The Life Aquatic with Steve Zissou\n- Fantastic Mr. Fox\n- Starsky \u0026 Hutch\n- The Big Bounce\n- Zoolander"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Jon Voight", "label": "Jon Voight", "shape": "dot", "size": 37.25, "title": "Acteur : Jon Voight\nP\u00e9riode : 2000_2009\n\nDegr\u00e9 total p\u00e9riode : 585\nNombre d\u2019acteurs diff\u00e9rents avec lesquels cet acteur a jou\u00e9 dans toute la p\u00e9riode.\n\nDegr\u00e9 visible dans ce graphe : 2\nNombre de liens avec les acteurs affich\u00e9s dans cette visualisation.\n\nCollaborateurs visibles : 2\n\nFilms visibles dans ce sous-graphe :\n- Zoolander\n- Tropic Thunder"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Michael Caine", "label": "Michael Caine", "shape": "dot", "size": 39.85, "title": "Acteur : Michael Caine\nP\u00e9riode : 2000_2009\n\nDegr\u00e9 total p\u00e9riode : 637\nNombre d\u2019acteurs diff\u00e9rents avec lesquels cet acteur a jou\u00e9 dans toute la p\u00e9riode.\n\nDegr\u00e9 visible dans ce graphe : 2\nNombre de liens avec les acteurs affich\u00e9s dans cette visualisation.\n\nCollaborateurs visibles : 2\n\nFilms visibles dans ce sous-graphe :\n- The Dark Knight\n- Batman Begins\n- Austin Powers in Goldmember"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Samuel L. Jackson", "label": "Samuel L. Jackson", "shape": "dot", "size": 41.4, "title": "Acteur : Samuel L. Jackson\nP\u00e9riode : 2000_2009\n\nDegr\u00e9 total p\u00e9riode : 668\nNombre d\u2019acteurs diff\u00e9rents avec lesquels cet acteur a jou\u00e9 dans toute la p\u00e9riode.\n\nDegr\u00e9 visible dans ce graphe : 2\nNombre de liens avec les acteurs affich\u00e9s dans cette visualisation.\n\nCollaborateurs visibles : 2\n\nFilms visibles dans ce sous-graphe :\n- xXx: State of the Union\n- 1408"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "J.K. Simmons", "label": "J.K. Simmons", "shape": "dot", "size": 41.800000000000004, "title": "Acteur : J.K. Simmons\nP\u00e9riode : 2000_2009\n\nDegr\u00e9 total p\u00e9riode : 676\nNombre d\u2019acteurs diff\u00e9rents avec lesquels cet acteur a jou\u00e9 dans toute la p\u00e9riode.\n\nDegr\u00e9 visible dans ce graphe : 2\nNombre de liens avec les acteurs affich\u00e9s dans cette visualisation.\n\nCollaborateurs visibles : 2\n\nFilms visibles dans ce sous-graphe :\n- Spider-Man 3\n- Spider-Man 2\n- Spider-Man"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Becca Sweitzer", "label": "Becca Sweitzer", "shape": "dot", "size": 46.6, "title": "Acteur : Becca Sweitzer\nP\u00e9riode : 2000_2009\n\nDegr\u00e9 total p\u00e9riode : 772\nNombre d\u2019acteurs diff\u00e9rents avec lesquels cet acteur a jou\u00e9 dans toute la p\u00e9riode.\n\nDegr\u00e9 visible dans ce graphe : 4\nNombre de liens avec les acteurs affich\u00e9s dans cette visualisation.\n\nCollaborateurs visibles : 4\n\nFilms visibles dans ce sous-graphe :\n- Starsky \u0026 Hutch\n- Tropic Thunder\n- Austin Powers in Goldmember\n- Hairspray"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Morgan Freeman", "label": "Morgan Freeman", "shape": "dot", "size": 37.35, "title": "Acteur : Morgan Freeman\nP\u00e9riode : 2000_2009\n\nDegr\u00e9 total p\u00e9riode : 587\nNombre d\u2019acteurs diff\u00e9rents avec lesquels cet acteur a jou\u00e9 dans toute la p\u00e9riode.\n\nDegr\u00e9 visible dans ce graphe : 2\nNombre de liens avec les acteurs affich\u00e9s dans cette visualisation.\n\nCollaborateurs visibles : 2\n\nFilms visibles dans ce sous-graphe :\n- The Big Bounce\n- The Dark Knight\n- Batman Begins"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Bernadette Lords", "label": "Bernadette Lords", "shape": "dot", "size": 38.2, "title": "Acteur : Bernadette Lords\nP\u00e9riode : 2000_2009\n\nDegr\u00e9 total p\u00e9riode : 604\nNombre d\u2019acteurs diff\u00e9rents avec lesquels cet acteur a jou\u00e9 dans toute la p\u00e9riode.\n\nDegr\u00e9 visible dans ce graphe : 3\nNombre de liens avec les acteurs affich\u00e9s dans cette visualisation.\n\nCollaborateurs visibles : 3\n\nFilms visibles dans ce sous-graphe :\n- Spider-Man 3\n- 1408"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Anne Fletcher", "label": "Anne Fletcher", "shape": "dot", "size": 42.550000000000004, "title": "Acteur : Anne Fletcher\nP\u00e9riode : 2000_2009\n\nDegr\u00e9 total p\u00e9riode : 691\nNombre d\u2019acteurs diff\u00e9rents avec lesquels cet acteur a jou\u00e9 dans toute la p\u00e9riode.\n\nDegr\u00e9 visible dans ce graphe : 1\nNombre de liens avec les acteurs affich\u00e9s dans cette visualisation.\n\nCollaborateurs visibles : 1\n\nFilms visibles dans ce sous-graphe :\n- Hairspray"}]);
+                  edges = new vis.DataSet([{"from": "Willem Dafoe", "title": "Lien : Willem Dafoe \u2194 J.K. Simmons\nNombre de films en commun : 3\n\nFilms en commun :\n- Spider-Man 3\n- Spider-Man 2\n- Spider-Man", "to": "J.K. Simmons", "value": 3, "width": 3}, {"from": "Willem Dafoe", "title": "Lien : Willem Dafoe \u2194 Bernadette Lords\nNombre de films en commun : 1\n\nFilms en commun :\n- Spider-Man 3", "to": "Bernadette Lords", "value": 1, "width": 1}, {"from": "Willem Dafoe", "title": "Lien : Willem Dafoe \u2194 Samuel L. Jackson\nNombre de films en commun : 1\n\nFilms en commun :\n- xXx: State of the Union", "to": "Samuel L. Jackson", "value": 1, "width": 1}, {"from": "Willem Dafoe", "title": "Lien : Willem Dafoe \u2194 Owen Wilson\nNombre de films en commun : 2\n\nFilms en commun :\n- The Life Aquatic with Steve Zissou\n- Fantastic Mr. Fox", "to": "Owen Wilson", "value": 2, "width": 2}, {"from": "Owen Wilson", "title": "Lien : Owen Wilson \u2194 Becca Sweitzer\nNombre de films en commun : 1\n\nFilms en commun :\n- Starsky \u0026 Hutch", "to": "Becca Sweitzer", "value": 1, "width": 1}, {"from": "Owen Wilson", "title": "Lien : Owen Wilson \u2194 Morgan Freeman\nNombre de films en commun : 1\n\nFilms en commun :\n- The Big Bounce", "to": "Morgan Freeman", "value": 1, "width": 1}, {"from": "Owen Wilson", "title": "Lien : Owen Wilson \u2194 Jon Voight\nNombre de films en commun : 1\n\nFilms en commun :\n- Zoolander", "to": "Jon Voight", "value": 1, "width": 1}, {"from": "Jon Voight", "title": "Lien : Jon Voight \u2194 Becca Sweitzer\nNombre de films en commun : 1\n\nFilms en commun :\n- Tropic Thunder", "to": "Becca Sweitzer", "value": 1, "width": 1}, {"from": "Michael Caine", "title": "Lien : Michael Caine \u2194 Morgan Freeman\nNombre de films en commun : 2\n\nFilms en commun :\n- The Dark Knight\n- Batman Begins", "to": "Morgan Freeman", "value": 2, "width": 2}, {"from": "Michael Caine", "title": "Lien : Michael Caine \u2194 Becca Sweitzer\nNombre de films en commun : 1\n\nFilms en commun :\n- Austin Powers in Goldmember", "to": "Becca Sweitzer", "value": 1, "width": 1}, {"from": "Samuel L. Jackson", "title": "Lien : Samuel L. Jackson \u2194 Bernadette Lords\nNombre de films en commun : 1\n\nFilms en commun :\n- 1408", "to": "Bernadette Lords", "value": 1, "width": 1}, {"from": "J.K. Simmons", "title": "Lien : J.K. Simmons \u2194 Bernadette Lords\nNombre de films en commun : 1\n\nFilms en commun :\n- Spider-Man 3", "to": "Bernadette Lords", "value": 1, "width": 1}, {"from": "Becca Sweitzer", "title": "Lien : Becca Sweitzer \u2194 Anne Fletcher\nNombre de films en commun : 1\n\nFilms en commun :\n- Hairspray", "to": "Anne Fletcher", "value": 1, "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {"physics": {"enabled": true, "stabilization": {"enabled": false}, "barnesHut": {"gravitationalConstant": -20000, "centralGravity": 0.2, "springLength": 180, "springConstant": 0.03, "damping": 0.08, "avoidOverlap": 0}}, "interaction": {"dragNodes": true, "dragView": true, "zoomView": true, "hover": true}};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    
+    <div style="
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
+        width: 410px;
+        background: rgba(255, 255, 255, 0.95);
+        color: black;
+        border: 2px solid #555;
+        padding: 14px;
+        z-index: 9999;
+        font-size: 13px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.35);
+        line-height: 1.4;
+        font-family: Arial, sans-serif;
+    ">
+        <h3 style="margin-top:0; margin-bottom:8px;">Lecture du graphe</h3>
+
+        <p><b>Nœud</b> : représente un acteur.</p>
+        <p><b>Lien</b> : deux acteurs ont joué ensemble dans au moins un film.</p>
+        <p><b>Taille du nœud</b> : dépend du degré de l’acteur.</p>
+        <p><b>Épaisseur du lien</b> : nombre de films joués en commun.</p>
+
+        <hr>
+
+        <p><b>Degré</b> : nombre d’acteurs différents avec lesquels un acteur a joué dans la période.</p>
+        <p><b>Films visibles</b> : films de la période présents dans le sous-graphe affiché.</p>
+
+        <hr>
+
+        <p><b>Astuce</b> : survolez un acteur ou un lien pour afficher les détails.</p>
+        <p style="font-size:12px;">
+            Le graphe complet étant très grand, seuls les acteurs les plus connectés sont affichés
+            afin de garder une visualisation lisible.
+        </p>
+    </div>
+    
+</body>
+</html>
